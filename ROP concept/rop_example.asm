@@ -1,6 +1,11 @@
 .data
 
+format db "Our formatted String \n", 0
+
 .code 
+
+extern printf : proc
+
 
 ; This function seems like it does nothing when first viewed :
 ; but looking at the bytes of these two instructuions which are :
@@ -37,6 +42,18 @@ unique_function_two proc
 unique_function_two endp
 
 
+unique_function_three proc
+	push rcx
+	sub rsp, 28h
+
+	mov rbx, 1000h
+
+	add rsp, 28h
+	pop rcx ; We pop the value we pushed off the top of the stack into rcx
+	ret ; return back to normal execution flow.
+unique_function_three endp
+
+
 unique_jump proc
 	mov rax, rcx ; move our jump location into rax
 	push rdx ; push our new return address onto the stack
@@ -49,6 +66,17 @@ unique_mov proc
 	push rcx ; push our return value onto the stack
 	ret
 unique_mov endp
+
+
+unique_mov_format proc
+	lea rdx, format ; Load our formated string onto the stack
+	lea rax, printf
+	push rax ; push the address of printf onto the stack (we will return here after unique_function_three)
+	push rdx ; push format onto the stack to be popped into rcx
+	push rcx ; push unique_function_three + 0x10 onto the stack then "jump" to it.
+	ret
+
+unique_mov_format endp
 
 
 end

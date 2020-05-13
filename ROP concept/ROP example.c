@@ -14,8 +14,12 @@
 
 extern unique_function();
 extern unique_function_two();
+extern unique_function_three();
 extern unique_jump(IN PVOID jmp_dst, IN PVOID dst);
 extern unique_mov(IN PVOID dst, IN UINT64 value);
+
+
+extern unique_mov_format(IN PVOID dst);
 
 /*
 	Empty function that displays when it is called
@@ -51,6 +55,15 @@ int main()
 	dst = (PVOID)((UINT64)unique_function_two + 0x10);
 
 	unique_mov(dst, 0x500);
+
+	/*
+		Simulate a call to printf
+	*/
+
+	dst = (PVOID)((UINT64)unique_function_three + 0x10);
+
+	unique_mov_format(dst);
+
 
 	return 0;
 }
